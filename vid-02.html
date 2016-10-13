@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <style type="text/css">
+    body {
+    }
+
+    .bar {
+      display: inline-block;
+      fill: teal;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+      padding: 50px;
+      width: 400px;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <script type="text/javascript">
+    let dataset = [5, 10, 15, 20, 25];
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', 400)
+      .attr('height', 300);
+
+    let multiplier = 7;
+
+    svg.selectAll('rect')
+      .data(dataset)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('height', d => {
+        return d * multiplier;
+      })
+      .attr('width', 20)
+      .attr('x', (d, i) => {
+        return i * 30;
+      })
+      .attr('y', d => {
+        return 300 - d * multiplier;
+      })
+  </script>
+</body>
+
+</html>
