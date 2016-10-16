@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js"></script>
+  <style type="text/css">
+    body {}
+
+    .bar {
+      display: inline-block;
+      fill: teal;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+      width: 400px;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <script type="text/javascript">
+    let dataset = _.map(_.range(25), i => {
+      return Math.random() * 50;
+    });
+
+    let w = 400;
+    let h = 300;
+
+    let xScale = d3.scaleBand()
+      .domain(dataset)
+      .range([0, w]);
+
+    let yScale = d3.scaleLinear()
+      .domain([0, 50])
+      .range([0, h]);
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', w)
+      .attr('height', h);
+
+    let multiplier = 7;
+
+    svg.selectAll('rect')
+      .data(dataset)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('height', d => {
+        return yScale(d);
+      })
+      .attr('width', xScale.bandwidth() * 0.5)
+      .attr('x', d => {
+        return xScale(d);
+      })
+      .attr('y', d => {
+        return h - yScale(d);
+      })
+  </script>
+</body>
+
+</html>

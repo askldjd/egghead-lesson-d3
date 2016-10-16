@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <style type="text/css">
+    body {}
+
+    .bar {
+      display: inline-block;
+      fill: teal;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <script type="text/javascript">
+    let dataset = [5, 10, 15, 20, 36, 7];
+
+    let w = 400;
+    let h = 300;
+
+    let yScale = d3.scaleLinear()
+      .domain([0, 50])
+      .range([0, h]);
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', w)
+      .attr('height', h);
+
+    let multiplier = 7;
+
+    svg.selectAll('rect')
+      .data(dataset)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('height', d => {
+        return yScale(d);
+      })
+      .attr('width', 20)
+      .attr('x', (d, i) => {
+        return i * 30;
+      })
+      .attr('y', d => {
+        return h - yScale(d);
+      })
+  </script>
+</body>
+</html>

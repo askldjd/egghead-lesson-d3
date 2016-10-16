@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js"></script>
+  <style type="text/css">
+    body {}
+
+    .bar {
+      display: inline-block;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+      width: 400px;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <script type="text/javascript">
+    let dataset = _.map(_.range(25), i => {
+      return Math.random() * 50;
+    });
+
+    let w = 400;
+    let h = 300;
+
+    let xScale = d3.scaleBand()
+      .domain(dataset)
+      .range([0, w]);
+
+    let yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset)])
+      .range([0, h]);
+
+    // Color scale using value of the data
+    // let colorScale = d3.scaleLinear()
+    //   .domain([0, d3.max(dataset)])
+    //   .range(['white', 'black']);
+
+    // Color scale using index
+    let colorScale = d3.scaleLinear()
+      .domain([0, dataset.length])
+      .range(['white', 'black']);
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', w)
+      .attr('height', h);
+
+    let multiplier = 7;
+
+    svg.selectAll('rect')
+      .data(dataset)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('height', d => {
+        return yScale(d);
+      })
+      .attr('width', xScale.bandwidth() * 0.5)
+      .attr('x', xScale)
+      .attr('y', d => {
+        return h - yScale(d);
+      })
+      // .attr('fill', colorScale);
+      .attr('fill', (d, i) => {
+        return colorScale(i);
+      });
+  </script>
+</body>
+
+</html>

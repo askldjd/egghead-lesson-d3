@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js"></script>
+  <style type="text/css">
+    body {}
+
+    .bar {
+      display: inline-block;
+      fill: teal;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+      width: 600px;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <script type="text/javascript">
+
+    let dataset = _.map(_.range(15), i => {
+      return Math.random() * 50;
+    });
+
+    let w = 600;
+    let h = 300;
+
+    let yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset) * 1.1])
+      .range([0, h]);
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', w)
+      .attr('height', h);
+
+    let multiplier = 7;
+
+    svg.selectAll('rect')
+      .data(dataset)
+      .enter()
+      .append('rect')
+      .attr('class', 'bar')
+      .attr('height', d => {
+        return yScale(d);
+      })
+      .attr('width', 20)
+      .attr('x', (d, i) => {
+        return i * 30;
+      })
+      .attr('y', d => {
+        return h - yScale(d);
+      })
+  </script>
+</body>
+</html>
