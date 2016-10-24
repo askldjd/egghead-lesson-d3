@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js"></script>
+  <style type="text/css">
+    body {}
+
+    .bar {
+      display: inline-block;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+      width: 400px;
+      height: 300px;
+    }
+
+    .bubble {
+      background-color: green;
+      opacity: 0.6;
+      fill: green;
+      border: 1px;
+      stroke: black;
+    }
+
+    .active {
+      fill: red;
+      stroke-width: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <button onclick="update()">Update</button>
+
+  <script type="text/javascript">
+    let dataset = _.map(_.range(25), i => {
+      return {
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        r: Math.random() * 30
+      }
+    });
+
+    let margin = {
+      top: 30,
+      right: 30,
+      bottom: 30,
+      left: 30
+    }
+
+    let w = 400 - margin.left - margin.right;
+    let h = 300 - margin.top - margin.bottom;
+
+    let xScale = d3.scaleLinear()
+      .domain([0, 100])
+      .range([0, w]);
+
+    let yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset, d => {
+        return d.y;
+      })])
+      .range([0, h]);
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', w + margin.left + margin.right)
+      .attr('height', h + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top })`);
+
+    svg.selectAll('circle')
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('class', 'bubble')
+      .attr('height', d => {
+        return yScale(d);
+      })
+      .attr('r', d => {
+        return d.r
+      })
+      .attr('cx', d => {
+        return xScale(d.x);
+      })
+      .attr('cy', d => {
+        return yScale(d.y);
+      })
+      .on('mouseover', function(d) {
+        d3.select(this).classed('active', true);
+      })
+      .on('mouseout', function(d) {
+        d3.select(this).classed('active', false);
+      })
+      .on('mousedown', function(d) {
+        d3.select(this).attr('r', d.r * 2)
+      })
+      .on('mouseup', function(d) {
+        d3.select(this).attr('r', d.r)
+      });
+
+
+    function update() {
+      _.forEach(dataset, datum => {
+        datum.x = Math.random() * 100,
+          datum.y = Math.random() * 100,
+          datum.r = Math.random() * 30
+      })
+
+      svg.selectAll('circle')
+        .transition()
+        .duration(500)
+        // .delay((d, i) => {
+        //   return i * 25;
+        // })
+        .ease(d3.easeElastic)
+        .attr('r', d => {
+          return d.r
+        })
+        .transition()
+        .duration(500)
+        .attr('cx', d => {
+          return xScale(d.x);
+        })
+        .transition()
+        .duration(500)
+        .attr('cy', d => {
+          return yScale(d.y);
+        })
+        .style('fill', 'purple');
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>D3 test</title>
+  <script src="./d3.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.16.4/lodash.min.js"></script>
+  <style type="text/css">
+    body {}
+
+    .bar {
+      display: inline-block;
+    }
+
+    #chartArea {
+      background-color: lightgray;
+      width: 400px;
+      height: 300px;
+    }
+    .bubble {
+        background-color: green;
+        opacity: 0.6;
+        fill: green;
+        border: 1px;
+        stroke: black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chartArea"></div>
+  <script type="text/javascript">
+    let dataset = _.map(_.range(25), i => {
+      return {
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        r: Math.random() * 30
+      }
+    });
+
+    let margin = {
+      top: 30,
+      right: 30,
+      bottom: 30,
+      left: 30
+    }
+
+    let w = 400 - margin.left - margin.right;
+    let h = 300 - margin.top - margin.bottom;
+
+    let xScale = d3.scaleLinear()
+      .domain([0, 100])
+      .range([0, w]);
+
+    let yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset, d => {
+        return d.y;
+      })])
+      .range([0, h]);
+
+    let svg = d3.select('#chartArea').append('svg')
+      .attr('width', w + margin.left + margin.right)
+      .attr('height', h + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top })`);
+
+    svg.selectAll('circle')
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('class', 'bubble')
+      .attr('height', d => {
+        return yScale(d);
+      })
+      .attr('r', d => {
+        return d.r
+      })
+      .attr('cx', d => {
+        return xScale(d.x);
+      })
+      .attr('cy', d => {
+        return yScale(d.y);
+      })
+  </script>
+</body>
+
+</html>
